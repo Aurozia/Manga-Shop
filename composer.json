@@ -1,0 +1,12 @@
+{
+    "require": {
+        "altorouter/altorouter": "^2.0",
+        "kint-php/kint": "^5.1"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "app\\" : "app/"
+        }
+    }
+}
