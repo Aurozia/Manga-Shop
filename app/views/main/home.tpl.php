@@ -6,7 +6,7 @@
           <div class="card-img-overlay d-flex align-items-center">
             <div class="w-100">
               <h2 class="display-3 font-weight-bold mb-4">Seinen</h2>
-              <a href="product_list.html" class="btn btn-light">Faire un tour
+              <a href="<?= $router->generate('category-list', ['name' => 'seinen']) ?>" class="btn btn-light">Faire un tour
                 <i class="fa-arrow-right fa ml-2"></i></a>
             </div>
           </div>
@@ -17,7 +17,7 @@
           <div class="card-img-overlay d-flex align-items-center">
             <div class="w-100">
               <h2 class="display-3 font-weight-bold mb-4">Shojo</h2>
-              <a href="product_list.html" class="btn btn-light">Bien choisir<i class="fa-arrow-right fa ml-2"></i></a>
+              <a href="<?= $router->generate('category-list', ['name' => 'shojo']) ?>" class="btn btn-light">Bien choisir<i class="fa-arrow-right fa ml-2"></i></a>
             </div>
           </div>
         </div>
@@ -27,7 +27,7 @@
           <div class="card-img-overlay d-flex align-items-center">
             <div class="w-100 py-3">
               <h2 class="display-3 font-weight-bold mb-4">Shonen</h2>
-              <a href="product_list.html" class="btn btn-light">C'est parti<i class="fa-arrow-right fa ml-2"></i></a>
+              <a href="<?= $router->generate('category-list', ['name' => 'shonen']) ?>" class="btn btn-light">C'est parti<i class="fa-arrow-right fa ml-2"></i></a>
             </div>
           </div>
         </div>

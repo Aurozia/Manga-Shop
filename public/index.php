@@ -30,6 +30,46 @@ $router->map(
   'main-home'
 );
 
+$router->map(
+  'GET',
+  '/panier',
+  [
+      'method' => 'cart',
+      'controller' => 'mainController'
+  ],
+  'main-cart'
+);
+
+$router->map(
+  'GET',
+  '/manga/[*:name]/[i:tome]',
+  [
+      'method' => 'product',
+      'controller' => 'categoryController'
+  ],
+  'category-product'
+);
+
+$router->map(
+  'GET',
+  '/categorie/[a:name]',
+  [
+      'method' => 'list',
+      'controller' => 'categoryController'
+  ],
+  'category-list'
+);
+
+$router->map(
+  'GET',
+  '/editeur/[*:name]',
+  [
+      'method' => 'list',
+      'controller' => 'editorController'
+  ],
+  'editor-list'
+);
+
 // Une fois que toutes sont definie, on va pouvoir demander a AltoRouter de verifier si la route atteinte par l'utilisation est une route qui correspond a celles que l'on a listees precedemment
 $match = $router->match();
 
