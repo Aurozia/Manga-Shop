@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS `editor` ;
 CREATE TABLE IF NOT EXISTS `editor` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL COMMENT "Le nom de l'éditeur",
+  `url` VARCHAR(45) NOT NULL COMMENT "Le nom de l'url de l'éditeur (du manga)",
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "La date de création de l'éditeur",
   `updated_at` TIMESTAMP NULL COMMENT "La date de la dernière mise à jour de l'éditeur",
   PRIMARY KEY (`id`));
@@ -71,13 +72,13 @@ ALTER TABLE product ADD CONSTRAINT fk_product_price_id FOREIGN KEY (price_id) RE
 -- Data for table `editor`
 -- -----------------------------------------------------
 START TRANSACTION;
-INSERT INTO `editor` (`id`, `name`, `created_at`, `updated_at`) VALUES (1, 'Akata', '2024-01-18 20:00:00', NULL);
-INSERT INTO `editor` (`id`, `name`, `created_at`, `updated_at`) VALUES (2, 'Crunchyroll', '2024-01-18 20:00:00', NULL);
-INSERT INTO `editor` (`id`, `name`, `created_at`, `updated_at`) VALUES (3, 'Kana', '2024-01-18 20:00:00', NULL);
-INSERT INTO `editor` (`id`, `name`, `created_at`, `updated_at`) VALUES (4, 'Kazé', '2024-01-18 20:00:00', NULL);
-INSERT INTO `editor` (`id`, `name`, `created_at`, `updated_at`) VALUES (5, 'Ki-oon', '2024-01-18 20:00:00', NULL);
-INSERT INTO `editor` (`id`, `name`, `created_at`, `updated_at`) VALUES (6, 'Kurokawa', '2024-01-18 20:00:00', NULL);
-INSERT INTO `editor` (`id`, `name`, `created_at`, `updated_at`) VALUES (7, 'Pika', '2024-01-18 20:00:00', NULL);
+INSERT INTO `editor` (`id`, `name`, `url`, `created_at`, `updated_at`) VALUES (1, 'Akata', 'akata', '2024-01-18 20:00:00', NULL);
+INSERT INTO `editor` (`id`, `name`, `url`, `created_at`, `updated_at`) VALUES (2, 'Crunchyroll', 'crunchyroll', '2024-01-18 20:00:00', NULL);
+INSERT INTO `editor` (`id`, `name`, `url`, `created_at`, `updated_at`) VALUES (3, 'Kana', 'kana', '2024-01-18 20:00:00', NULL);
+INSERT INTO `editor` (`id`, `name`, `url`, `created_at`, `updated_at`) VALUES (4, 'Kazé', 'kaze', '2024-01-18 20:00:00', NULL);
+INSERT INTO `editor` (`id`, `name`, `url`, `created_at`, `updated_at`) VALUES (5, 'Ki-oon', 'ki-oon', '2024-01-18 20:00:00', NULL);
+INSERT INTO `editor` (`id`, `name`, `url`, `created_at`, `updated_at`) VALUES (6, 'Kurokawa', 'kurokawa', '2024-01-18 20:00:00', NULL);
+INSERT INTO `editor` (`id`, `name`, `url`, `created_at`, `updated_at`) VALUES (7, 'Pika', 'pika', '2024-01-18 20:00:00', NULL);
 
 COMMIT;
 

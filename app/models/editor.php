@@ -8,6 +8,7 @@ use PDO;
 class Editor extends coreModel
 {
   private $name;
+  private $url;
 
   /**
    * Empty constructor
@@ -81,6 +82,26 @@ class Editor extends coreModel
   public function setName($name)
   {
     $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of url
+   */ 
+  public function getUrl()
+  {
+    return $this->url;
+  }
+
+  /**
+   * Set the value of url
+   *
+   * @return  self
+   */ 
+  public function setUrl($url)
+  {
+    $this->url = $url;
 
     return $this;
   }

@@ -43,16 +43,9 @@
               <div class="dropdown">
                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Mangas</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                  <a class="dropdown-item" href="<?= $router->generate('category-product', ['name' => '@ellie', 'tome' => 1]) ?>">@Ellie</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-product', ['name' => 'a-sign-of-affection', 'tome' => 1]) ?>">A Sign Of Affection</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-product', ['name' => 'criminelles-fiancailles', 'tome' => 1]) ?>">Criminelles Fiançailles</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-product', ['name' => 'dandadan', 'tome' => 1]) ?>">DanDaDan</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-product', ['name' => 'frieren', 'tome' => 1]) ?>">Frieren</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-product', ['name' => 'hell-s-paradise', 'tome' => 1]) ?>">Hell's Paradise</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-product', ['name' => 'kaiju-no-8', 'tome' => 1]) ?>">Kaiju No. 8</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-product', ['name' => 'les-carnets-de-l-apothicaire', 'tome' => 1]) ?>">Les Carnets de l'Apothicaire</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-product', ['name' => 'oshi-no-ko', 'tome' => 1]) ?>">Oshi No Ko</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-product', ['name' => 'ton-visage-au-clair-de-lune', 'tome' => 1]) ?>">Ton visage au Clair de Lune</a>
+                  <?php foreach ($productList as $product) : ?>
+                    <a class="dropdown-item" href="<?= $router->generate('category-product', ['name' => $product->getUrl(), 'tome' => $product->getTome_id()]) ?>"><?= $product->getName() ?></a>
+                  <?php endforeach ?>
                 </div>
               </div>
             </li>
@@ -60,10 +53,9 @@
               <div class="dropdown">
                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Catégories</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                  <a class="dropdown-item" href="<?= $router->generate('category-list', ['name' => 'josei']) ?>">Josei</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-list', ['name' => 'seinen']) ?>">Seinen</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-list', ['name' => 'shojo']) ?>">Shojo</a>
-                  <a class="dropdown-item" href="<?= $router->generate('category-list', ['name' => 'shonen']) ?>">Shonen</a>
+                  <?php foreach ($categoryList as $category) : ?>
+                    <a class="dropdown-item" href="<?= $router->generate('category-list', ['name' => $category->getUrl()]) ?>"><?= $category->getName() ?></a>
+                  <?php endforeach ?>
                 </div>
               </div>
             </li>
@@ -71,12 +63,9 @@
               <div class="dropdown">
                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Éditeurs</a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                  <a class="dropdown-item" href="<?= $router->generate('editor-list', ['name' => 'akata']) ?>">Akata</a>
-                  <a class="dropdown-item" href="<?= $router->generate('editor-list', ['name' => 'pika']) ?>">Pika</a>
-                  <a class="dropdown-item" href="<?= $router->generate('editor-list', ['name' => 'crunchyroll']) ?>">Crunchyroll</a>
-                  <a class="dropdown-item" href="<?= $router->generate('editor-list', ['name' => 'kana']) ?>">Kana</a>
-                  <a class="dropdown-item" href="<?= $router->generate('editor-list', ['name' => 'kaze']) ?>">Kazé</a>
-                  <a class="dropdown-item" href="<?= $router->generate('editor-list', ['name' => 'ki-oon']) ?>">Ki-oon</a>
+                  <?php foreach ($editorList as $editor) : ?>
+                    <a class="dropdown-item" href="<?= $router->generate('editor-list', ['name' => $editor->getUrl()]) ?>"><?= $editor->getName() ?></a>
+                  <?php endforeach ?>
                 </div>
               </div>
             </li>
