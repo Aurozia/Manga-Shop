@@ -54,12 +54,13 @@ class Product extends coreModel
      * Fonction qui permet de recuperer les informations d'un produit en particulier grace a son url
      *
      * @param string $url l'url du produit en bdd
+     * @param int $tome le tome du produit en bdd
      * @return Product
      */
-    public function find($url)
+    public function find($url, $tome)
     {
-        // 1. Requete pour récupérer UN produit grace a son id (String)
-        $sql = 'SELECT * FROM `product` WHERE `url` = ' . $url;
+        // 1. Requete pour récupérer UN produit grace a son url (String)
+        $sql = "SELECT * FROM `product` WHERE `url` = '{$url}' AND `tome_id` = '{$tome}'";
 
         // 2. Connexion à la BDD
         $pdo = Database::getPDO();
@@ -72,6 +73,32 @@ class Product extends coreModel
 
         // On retourne l'objet Product
         return $result;
+    }
+
+    /**
+     * Fonction qui permet de recuperer les produits de même nom en particulier
+     *
+     * @return array[Product] Un tableau contenant des objets de type Product
+     */
+    public function findProductsByName($name)
+    {
+        $escapedName = "'" . addslashes($name) . "'";
+
+        // 1. Requete pour récupérer tous les produits par rapport au nom en particulier
+        $sql = "SELECT * FROM `product` WHERE `name` = $escapedName";
+    
+        // 2. Connexion à la BDD
+        $pdo = Database::getPDO();
+
+        // 3. Exécute la requete
+        $pdoStatement = $pdo->query($sql);
+
+        // On Recupere les resultats lie a cette requete
+        // Les resultats auraient pu etre sous la forme d'un tableau associatif (PDO::FETCH__ASSOC) mais on souhaite les obtenir sous forme d'object ! On utilise donc PDO::FETCH__CLASS en precisant la classe 'Product'
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'app\models\product');
+
+        // On retourne le tableau de Product
+        return $results;
     }
 
     /**

@@ -68,7 +68,7 @@ class Price extends coreModel
   /**
    * Get the value of amount
    */
-  public function getAmout()
+  public function getAmount()
   {
     return $this->amount;
   }
@@ -78,7 +78,7 @@ class Price extends coreModel
    *
    * @return  self
    */
-  public function setAmout($amount)
+  public function setAmount($amount)
   {
     $this->amount = $amount;
 
