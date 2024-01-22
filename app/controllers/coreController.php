@@ -7,7 +7,7 @@ class coreController
     // Empty constructor
     public function __construct()
     {
-        // Do noting
+        // Do nothing
     }
 
     /**

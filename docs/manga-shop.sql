@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `category` (
   `name` VARCHAR(64) NOT NULL COMMENT 'Le nom de la catégorie du manga',
   `subtitle` VARCHAR(256) NULL,
   `picture` VARCHAR(128) NULL COMMENT "L'URL de l'image de la catégorie du manga",
+  `url` VARCHAR(45) NULL COMMENT "Le nom de l'url de de la catégorie (du manga)",
   `home_order` TINYINT(1) NOT NULL DEFAULT 0 COMMENT "L'ordre d'affichage de la catégorie sur la home (0=pas affichée en home)",
   `home_subtitle` VARCHAR(64) NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'La date de création de la catégorie',
@@ -96,10 +97,10 @@ COMMIT;
 -- Data for table `category`
 -- -----------------------------------------------------
 START TRANSACTION;
-INSERT INTO `category` (`id`, `name`, `subtitle`, `picture`, `home_order`, `home_subtitle`, `created_at`, `updated_at`) VALUES (1, 'Josei', NULL, NULL, 0, NULL, '2024-01-18 20:00:00', NULL);
-INSERT INTO `category` (`id`, `name`, `subtitle`, `picture`, `home_order`,  `home_subtitle`, `created_at`, `updated_at`) VALUES (2, 'Shonen', "Explorez notre sélection de mangas Shonen disponibles ici, proposant des histoires dynamiques, des héros audacieux et des aventures captivantes.", '/assets/images/category1.jpg', 3, "C'est parti",'2024-01-18 20:00:00', NULL);
-INSERT INTO `category` (`id`, `name`, `subtitle`, `picture`, `home_order`, `home_subtitle`, `created_at`, `updated_at`) VALUES (3, 'Shojo', "Découvrez notre collection de mangas Shojo, offrant des récits romantiques et émouvants mettant en scène des personnages attachants. Plongez-vous dans des histoires captivantes remplies de romance et d'émotions sincères.", '/assets/images/category2.jpg', 2, "Bien choisir",'2024-01-18 20:00:00', NULL);
-INSERT INTO `category` (`id`, `name`, `subtitle`, `picture`, `home_order`, `home_subtitle`,  `created_at`, `updated_at`) VALUES (4, 'Seinen', "Explorez notre assortiment de mangas Seinen, proposant des intrigues matures et complexes, ainsi que des personnages nuancés. Découvrez des œuvres innovantes qui repoussent les limites du genre, offrant des perspectives uniques et des récits profonds.", '/assets/images/category3.jpg', 1, "Faire un tour",'2024-01-18 20:00:00', NULL);
+INSERT INTO `category` (`id`, `name`, `subtitle`, `picture`, `url`, `home_order`, `home_subtitle`, `created_at`, `updated_at`) VALUES (1, 'Josei', NULL, NULL, 'josei', 0, NULL, '2024-01-18 20:00:00', NULL);
+INSERT INTO `category` (`id`, `name`, `subtitle`, `picture`, `url`,  `home_order`,  `home_subtitle`, `created_at`, `updated_at`) VALUES (2, 'Shonen', "Explorez notre sélection de mangas Shonen disponibles ici, proposant des histoires dynamiques, des héros audacieux et des aventures captivantes.", '/assets/images/category1.jpg', 'shonen', 3, "C'est parti",'2024-01-18 20:00:00', NULL);
+INSERT INTO `category` (`id`, `name`, `subtitle`, `picture`, `url`, `home_order`, `home_subtitle`, `created_at`, `updated_at`) VALUES (3, 'Shojo', "Découvrez notre collection de mangas Shojo, offrant des récits romantiques et émouvants mettant en scène des personnages attachants. Plongez-vous dans des histoires captivantes remplies de romance et d'émotions sincères.", '/assets/images/category3.jpg', 'shojo', 2, "Découvrir",'2024-01-18 20:00:00', NULL);
+INSERT INTO `category` (`id`, `name`, `subtitle`, `picture`, `url`, `home_order`, `home_subtitle`,  `created_at`, `updated_at`) VALUES (4, 'Seinen', "Explorez notre assortiment de mangas Seinen, proposant des intrigues matures et complexes, ainsi que des personnages nuancés. Découvrez des œuvres innovantes qui repoussent les limites du genre, offrant des perspectives uniques et des récits profonds.", '/assets/images/category2.jpg', 'seinen', 1, "Faire un tour",'2024-01-18 20:00:00', NULL);
 
 COMMIT;
 
