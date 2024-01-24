@@ -48,9 +48,43 @@ class Editor extends coreModel
    * @param int $id l'id de l'éditeur en bdd
    * @return Editor
    */
-  public function find($id)
+  public function find($name)
   {
-    // 1. Requete pour récupérer UN éditeur grace a son id
+    // 1. Requête pour récupérer UNE catégorie grâce à son nom
+    $sql = 'SELECT * FROM `editor` WHERE `name` = :name';
+
+    // 2. Connexion à la BDD
+    $pdo = Database::getPDO();
+
+    // 3. Préparation de la requête
+    $pdoStatement = $pdo->prepare($sql);
+    
+    // 4. Attribution des valeurs aux paramètres
+    $pdoStatement->bindValue(':name', $name, PDO::PARAM_STR);
+
+    // 5. Exécution de la requête
+    if ($pdoStatement->execute()) {
+        // 6. Récupération du résultat sous la forme d'un objet Category
+        $result = $pdoStatement->fetchObject('app\models\editor');
+
+        // 7. Retourne l'objet Category ou null si non trouvé
+        return $result !== false ? $result : null;
+    } else {
+        // Gestion des erreurs
+        // Vous pouvez logguer l'erreur, lancer une exception, ou prendre toute autre mesure nécessaire
+        return null;
+    }
+}
+
+ /**
+   * Fonction qui permet de recuperer les informations d'un éditeur en particulier grace a son id
+   *
+   * @param int $id l'id de l'éditeur en bdd
+   * @return Editor
+   */
+  public function findById($id)
+  {
+    // 1. Requete pour récupérer UN prix grace a son id
     $sql = 'SELECT * FROM `editor` WHERE `id` = ' . $id;
 
     // 2. Connexion à la BDD
@@ -59,10 +93,10 @@ class Editor extends coreModel
     // 3. Exécute la requete
     $pdoStatement = $pdo->query($sql);
 
-    // On recupere le resultat sous la forme d'un objet Editor
+    // On recupere le resultat sous la forme d'un objet Price
     $result = $pdoStatement->fetchObject('app\models\editor');
 
-    // On retourne l'objet Editor
+    // On retourne l'objet Price
     return $result;
   }
 

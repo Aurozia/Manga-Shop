@@ -69,7 +69,7 @@ class Category extends coreModel
       // 5. Exécution de la requête
       if ($pdoStatement->execute()) {
           // 6. Récupération du résultat sous la forme d'un objet Category
-          $result = $pdoStatement->fetchObject('app\models\Category');
+          $result = $pdoStatement->fetchObject('app\models\category');
   
           // 7. Retourne l'objet Category ou null si non trouvé
           return $result !== false ? $result : null;
