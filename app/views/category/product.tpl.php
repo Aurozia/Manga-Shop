@@ -15,7 +15,7 @@
       <!-- product-->
       <div class="col-lg-5 col-sm-12">
         <div class="product-image d-flex justify-content-center">
-          <img src="<?= $absoluteURL ?><?= $viewData['productObj']->getPicture() ?>" alt="Manga <?= $viewData['productObj']->getName() ?> cover tome <?= $viewData['productObj']->getTome_id() ?>" class="img-fluid">
+          <img src="<?= $absoluteURL ?><?= $viewData['productObj']->getPicture() ?>" alt="Manga <?= $viewData['productObj']->getName() ?> cover tome <?= $viewData['productObj']->getTome_id() ?>" class="img-fluid img">
         </div>
       </div>
       <div class="col-lg-7 col-sm-12">

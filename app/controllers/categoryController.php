@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\product;
+use app\models\category;
 use app\models\editor;
 use app\models\price;
 
@@ -57,10 +58,45 @@ class categoryController extends coreController
    * @param [type] $params : pas utilisé
    * @return void
    */
-  public function list()
+  public function list($params)
   {
-    $this->show(
-      'category/list'
-    );
+    // 1. préparation des données
+    $categoryObj = new category();
+    $categoryFoundInDB  = $categoryObj->find($params['name']);
+    
+    if ($categoryFoundInDB) {
+      $productsByCategoryObj = new Product();
+
+      $productsByCategoryList = $productsByCategoryObj->findProductsByCategory($categoryFoundInDB->getId());
+
+      $productsByCategoryListBis = [];
+
+      foreach ($productsByCategoryList as $productsByCategory) {
+        if($productsByCategory->getTome_id() === 1) {
+          $editorProductObj = new Editor();
+          $editorProductFoundInDB = $editorProductObj->find($productsByCategory->getEditor_id());
+
+          $priceProductObj = new Price();
+          $priceProductFoundInDB = $priceProductObj->find($productsByCategory->getPrice_id());
+
+          $productsByCategory->editorName = $editorProductFoundInDB->getName();
+          $productsByCategory->priceAmount = $priceProductFoundInDB->getAmount();
+
+          array_push($productsByCategoryListBis, $productsByCategory);
+        }
+      }
+
+      // 2. appel de la vue
+      $this->show(
+          'category/list',
+          [
+            'categoryObj' => $categoryFoundInDB,
+            'productsByCategoryList' => $productsByCategoryListBis
+          ]
+      );
+    } else {
+      http_response_code(404);
+      $this->show('error/error404');
+    }
   }
 }

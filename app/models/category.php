@@ -49,25 +49,35 @@ class Category extends coreModel
   /**
    * Fonction qui permet de recuperer les informations d'une catégorie en particulier grace a son id
    *
-   * @param int $id l'id de la catégorie en bdd
+   * @param int $name le nom de la catégorie en bdd
    * @return Category
    */
-  public function find($id)
+  public function find($name)
   {
-    // 1. Requete pour récupérer UNE catégorie grace a son id
-    $sql = 'SELECT * FROM `category` WHERE `id` = ' . $id;
-
-    // 2. Connexion à la BDD
-    $pdo = Database::getPDO();
-
-    // 3. Exécute la requete
-    $pdoStatement = $pdo->query($sql);
-
-    // On recupere le resultat sous la forme d'un objet Category
-    $result = $pdoStatement->fetchObject('app\models\category');
-
-    // On retourne l'objet Category
-    return $result;
+      // 1. Requête pour récupérer UNE catégorie grâce à son nom
+      $sql = 'SELECT * FROM `category` WHERE `name` = :name';
+  
+      // 2. Connexion à la BDD
+      $pdo = Database::getPDO();
+  
+      // 3. Préparation de la requête
+      $pdoStatement = $pdo->prepare($sql);
+      
+      // 4. Attribution des valeurs aux paramètres
+      $pdoStatement->bindValue(':name', $name, PDO::PARAM_STR);
+  
+      // 5. Exécution de la requête
+      if ($pdoStatement->execute()) {
+          // 6. Récupération du résultat sous la forme d'un objet Category
+          $result = $pdoStatement->fetchObject('app\models\Category');
+  
+          // 7. Retourne l'objet Category ou null si non trouvé
+          return $result !== false ? $result : null;
+      } else {
+          // Gestion des erreurs
+          // Vous pouvez logguer l'erreur, lancer une exception, ou prendre toute autre mesure nécessaire
+          return null;
+      }
   }
 
   /**
