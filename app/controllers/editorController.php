@@ -14,15 +14,44 @@ class editorController extends coreController
    * @param [type] $params : pas utilisé
    * @return void
    */
-  public function list($params)
+  public function list($params, $order = null)
   {
+    $tableName = 'editor';
+
+    if (str_contains($params['name'], '/')) {
+      $url = explode('/', $params['name']);
+      $name = $url[0];
+    }
+    else {
+      $name = $params['name'];
+    }
+
     // 1. préparation des données
     $editorObj = new editor();
-    $editorFoundInDB  = $editorObj->find($params['name']);
+    $editorFoundInDB  = $editorObj->find($name);
 
     if ($editorFoundInDB) {
       $productsByEditorObj = new Product();
-      $productsByEditorList = $productsByEditorObj->findProductsByEditor($editorFoundInDB->getId());
+
+      if(!empty($_POST)) {
+				if (isset($_POST['select'])) {
+					$selectedOption = $_POST['select'];
+					if (str_contains($selectedOption, 'by-name')) {
+						$order = 'name';
+					} else if (str_contains($selectedOption, 'by-price')) {
+						$order = 'price_id';
+					} else {
+						$order = 'null';
+					}
+				}
+			}
+
+      if($order!==null) {
+				$productsByEditorList = $productsByEditorObj->findAllBy($editorFoundInDB->getId(), $table = 'editor_id', $order);
+			}
+			else {
+        $productsByEditorList = $productsByEditorObj->findProductsByEditor($editorFoundInDB->getId());
+      }
 
       $productsByEditorListBis = [];
 
@@ -39,10 +68,13 @@ class editorController extends coreController
 
       // 2. appel de la vue
       $this->show(
-        'editor/list',
+        'partials/list',
         [
-          'editorObj' => $editorFoundInDB,
-          'productsByEditorList' => $productsByEditorListBis
+          'tableName' => $tableName,
+          // 'editorObj' => $editorFoundInDB,
+          // 'productsByEditorList' => $productsByEditorListBis,
+          'tableObj' => $editorFoundInDB,
+          'productList' => $productsByEditorListBis
         ]
       );
     } else {

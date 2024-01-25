@@ -150,50 +150,34 @@ class Product extends coreModel
     }
 
     /**
-     * Fonction qui permet de recuperer les produits d'une marque en particulier
+     * Fonction qui permet de recuperer les produits d'une catégorie ou d'un éditeur en particulier + qui trie les produits par nom/prix de la catégorie ou de l'éditeur en question
      *
      * @return array[Product] Un tableau contenant des objets de type Product
      */
-    public function  findProductsByPrice($id)
-    {
-        // 1. Requete pour récupérer tous les produits par rapport  a un prix en particulier
-        $sql = 'SELECT * FROM `product` WHERE price_id = ' . $id;
-
-        // 2. Connexion à la BDD
-        $pdo = Database::getPDO();
-
-        // 3. Exécute la requete
-        $pdoStatement = $pdo->query($sql);
-
-        // On Recupere les resultats lie a cette requete
-        // Les resultats auraient pu etre sous la forme d'un tableau associatif (PDO::FETCH__ASSOC) mais on souhaite les obtenir sous forme d'object ! On utilise donc PDO::FETCH__CLASS en precisant la classe 'Product'
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'app\models\product');
-
-        // On retourne l'objet Product
-        return $results;
-    }
-
-    /**
-     * Fonction qui permet de recuperer les produits d'une catégorie en particulier + qui trie les produits par nom/prix de la catégorie en question
-     *
-     * @return array[Product] Un tableau contenant des objets de type Product
-     */
-    public function findAllBy($id, $order)
+    public function findAllBy($id, $table, $order)
     {
         // 1. Requete pour récupérer tous les produits d'une catégorie en particulier + qui trie les produits par nom/prix de la catégorie en question
-        $sql = 'SELECT * FROM `product` WHERE `category_id` = ' . $id . ' ORDER BY ' . $order . ' ASC';
+        $sql = 'SELECT product.* FROM `product` AS product
+        JOIN `price` AS price ON product.price_id = price.id
+        WHERE product.' . $table . ' = :id 
+        ORDER BY ' . $order . ' ASC';
 
         // 2. Connexion à la BDD
         $pdo = Database::getPDO();
 
-        // 3. Exécute la requete
-        $pdoStatement = $pdo->query($sql);
+        // 3. Préparation de la requête
+        $pdoStatement = $pdo->prepare($sql);
+        
+        // 4. Attribution des valeurs aux paramètres
+        $pdoStatement->bindValue(':id', $id, PDO::PARAM_INT);
 
-        // On Recupere les resultats lie a cette requete
-        // Les resultats auraient pu etre sous la forme d'un tableau associatif (PDO::FETCH__ASSOC) mais on souhaite les obtenir sous forme d'object ! On utilise donc PDO::FETCH__CLASS en precisant la classe 'Product'
+        // 5. Exécution de la requête
+        $pdoStatement->execute();
+
+        // 6. Récupération des résultats
         $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'app\models\product');
 
-        // On retourne l'objet Product
+        // 7. On retourne les objets Product
         return $results;
     }
 

@@ -26,11 +26,25 @@
           Affichage <strong>1-<?= (count($viewData['productsByCategoryList']) > 4) ? 4 : count($viewData['productsByCategoryList']); ?> </strong>de <strong><?= count($viewData['productsByCategoryList']) ?> </strong>résultats
         </div>
         <div class="mb-3 d-flex align-items-center"><span class="d-inline-block mr-1">Trier par</span>
-          <select class="custom-select w-auto border-0">
-            <option value="orderby_0">Défaut</option>
-            <option value="orderby_1">Nom</option>
-            <option value="orderby_3">Prix</option>
+        <!-- <select class="custom-select w-auto border-0">
+          <option value="orderby_0">Défaut</option>
+          <option value="orderby_1">Nom</option>
+          <option value="orderby_3">Prix</option>
+        </select> -->
+        <form id="form" action="" method="post">
+          <select id="select" name="select" class="custom-select w-auto border-0">
+            <option value="<?= $router->generate('category-list-post', ['name' => $viewData['categoryObj']->getUrl()]); ?>">Défaut</option>
+            <option name="name" value="<?= $router->generate('category-list-byname', ['name' => $viewData['categoryObj']->getUrl()]); ?>">Nom</option>
+            <option name="price" value="<?= $router->generate('category-list-byprice', ['name' => $viewData['categoryObj']->getUrl()]); ?>">Prix</option>
           </select>
+        </form>
+
+        <script>
+          document.querySelector('#select').addEventListener('click', function() {
+            document.querySelector('#form').action = this.value;
+            document.querySelector('#form').submit();
+          });
+        </script>
         </div>
       </header>
       <div class="row">

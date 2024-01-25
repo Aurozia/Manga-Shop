@@ -58,16 +58,44 @@ class categoryController extends coreController
    * @param [type] $params : pas utilisé
    * @return void
    */
-  public function list($params)
+  public function list($params, $order = null)
   {
+    $tableName = 'category';
+
+    if (str_contains($params['name'], '/')) {
+      $url = explode('/', $params['name']);
+      $name = $url[0];
+    }
+    else {
+      $name = $params['name'];
+    }
+
     // 1. préparation des données
     $categoryObj = new category();
-    $categoryFoundInDB  = $categoryObj->find($params['name']);
+    $categoryFoundInDB  = $categoryObj->find($name);
 
     if ($categoryFoundInDB) {
       $productsByCategoryObj = new Product();
 
-      $productsByCategoryList = $productsByCategoryObj->findProductsByCategory($categoryFoundInDB->getId());
+      if(!empty($_POST)) {
+				if (isset($_POST['select'])) {
+					$selectedOption = $_POST['select'];
+					if (str_contains($selectedOption, 'by-name')) {
+						$order = 'name';
+					} else if (str_contains($selectedOption, 'by-price')) {
+						$order = 'price_id';
+					} else {
+						$order = 'null';
+					}
+				}
+			}
+
+      if($order!==null) {
+				$productsByCategoryList = $productsByCategoryObj->findAllBy($categoryFoundInDB->getId(), $table = 'category_id', $order);
+			}
+			else {
+        $productsByCategoryList = $productsByCategoryObj->findProductsByCategory($categoryFoundInDB->getId());
+      }
 
       $productsByCategoryListBis = [];
 
@@ -89,10 +117,13 @@ class categoryController extends coreController
 
       // 2. appel de la vue
       $this->show(
-        'category/list',
+        'partials/list',
         [
-          'categoryObj' => $categoryFoundInDB,
-          'productsByCategoryList' => $productsByCategoryListBis
+          'tableName' => $tableName,
+          // 'categoryObj' => $categoryFoundInDB,
+          // 'productsByCategoryList' => $productsByCategoryListBis,
+          'tableObj' => $categoryFoundInDB,
+          'productList' => $productsByCategoryListBis
         ]
       );
     } else {

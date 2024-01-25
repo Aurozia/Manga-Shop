@@ -30,6 +30,7 @@ $router->map(
   'main-home'
 );
 
+// CART
 $router->map(
   'GET',
   '/panier',
@@ -40,6 +41,7 @@ $router->map(
   'main-cart'
 );
 
+// PRODUCT
 $router->map(
   'GET',
   '/manga/[*:name]/[i:tome]',
@@ -50,6 +52,7 @@ $router->map(
   'category-product'
 );
 
+// CATEGORY LIST
 $router->map(
   'GET',
   '/categorie/[a:name]',
@@ -60,6 +63,40 @@ $router->map(
   'category-list'
 );
 
+// ORDER BY DEFAULT
+$router->map(
+  'POST',
+  '/categorie/[a:name]',
+  [
+      'method' => 'list',
+      'controller' => 'categoryController'
+  ],
+  'category-list-post'
+);
+
+// ORDER BY NAME
+$router->map(
+  'POST',
+  '/categorie/[a:name]/by-name',
+  [
+      'method' => 'list',
+      'controller' => 'categoryController'
+  ],
+  'category-list-byname'
+);
+
+// ORDER BY PRICE
+$router->map(
+  'POST',
+  '/categorie/[a:name]/by-price',
+  [
+      'method' => 'list',
+      'controller' => 'categoryController'
+  ],
+  'category-list-byprice'
+);
+
+// EDITOR LIST
 $router->map(
   'GET',
   '/editeur/[*:name]',
@@ -68,6 +105,39 @@ $router->map(
       'controller' => 'editorController'
   ],
   'editor-list'
+);
+
+// ORDER BY DEFAULT
+$router->map(
+  'POST',
+  '/editeur/[*:name]',
+  [
+      'method' => 'list',
+      'controller' => 'editorController'
+  ],
+  'editor-list-post'
+);
+
+// ORDER BY NAME
+$router->map(
+  'POST',
+  '/editeur/[*:name]/by-name',
+  [
+      'method' => 'list',
+      'controller' => 'editorController'
+  ],
+  'editor-list-byname'
+);
+
+// ORDER BY PRICE
+$router->map(
+  'POST',
+  '/editeur/[*:name]/by-price',
+  [
+      'method' => 'list',
+      'controller' => 'editorController'
+  ],
+  'editor-list-byprice'
 );
 
 // Une fois que toutes sont definie, on va pouvoir demander a AltoRouter de verifier si la route atteinte par l'utilisation est une route qui correspond a celles que l'on a listees precedemment
