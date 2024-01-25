@@ -1,160 +1,65 @@
 <?php
 
-// Utilise l'autoloader de composer pour venir charge toutes les dependances de notre projet
-require_once __DIR__ . '/../vendor/autoload.php';
+// POINT D'ENTRÉE UNIQUE :
+// FrontController
 
-// Récupère le nom de la page que l'user souhaite atteindre
-// L'operateur ?? permet de mettre une valeur par defaut dans le cas ou $_GET['_url'] n'est pas defini
-$pageName = $_GET['_url'] ?? '/';
+// inclusion des dépendances via Composer
+// autoload.php permet de charger d'un coup toutes les dépendances installées avec composer
+// mais aussi d'activer le chargement automatique des classes (convention PSR-4)
+require_once '../vendor/autoload.php';
 
-// Pour utiliser AltoRouter il va falloir instancier (creer un nouvel objet a partir de) la classe AltoRouter.
+/* ------------
+--- ROUTAGE ---
+-------------*/
+
+// création de l'objet router
+// Cet objet va gérer les routes pour nous, et surtout il va
 $router = new AltoRouter();
 
-// Permet de definir le dossier racine de l'application
-// Utilise la superglobale $_SERVER pour recuperer la valeur de notre point d'entree de l'application
-// C'est grace au .htaccess que l'on a cette valeur dans la cle 'BASE_URI'
-$router->setBasePath($_SERVER['BASE_URI']);
+// le répertoire (après le nom de domaine) dans lequel on travaille est celui-ci
+// Mais on pourrait travailler sans sous-répertoire
+// Si il y a un sous-répertoire
+if (array_key_exists('BASE_URI', $_SERVER)) {
+  // Alors on définit le basePath d'AltoRouter
+  $router->setBasePath($_SERVER['BASE_URI']);
+  // ainsi, nos routes correspondront à l'URL, après la suite de sous-répertoire
+} else { // sinon
+  // On donne une valeur par défaut à $_SERVER['BASE_URI'] car c'est utilisé dans le CoreController
+  $_SERVER['BASE_URI'] = '/';
+}
 
-// Apres avoir instancier AltoRouter, il va falloir effectuer un mapping. C'est a dire lister les routes qui devront etre disponibles sur notre application
+// On doit déclarer toutes les "routes" à AltoRouter,
+// afin qu'il puisse nous donner LA "route" correspondante à l'URL courante
+// On appelle cela "mapper" les routes
+// 1. méthode HTTP : GET ou POST (pour résumer)
+// 2. La route : la portion d'URL après le basePath
+// 3. Target/Cible : informations contenant
+//      - le nom de la méthode à utiliser pour répondre à cette route
+//      - le nom du controller contenant la méthode
+// 4. Le nom de la route : pour identifier la route, on va suivre une convention
+//      - "NomDuController-NomDeLaMéthode"
+//      - ainsi pour la route /, méthode "home" du MainController => "main-home"
 $router->map(
-  // 1er argument => On defini la methode de la requete (on a vu les methodes GET et POST), si on veut simplement afficher une page, on utilisera la methode GET
   'GET',
-  // 2eme argument => On liste le chemin, ici on fait reference a la route '/' donc la page d'accueil de notre application
   '/',
-  // 3eme argument => Les informations qui contiennent ce que l'on doit executer lorsque cette route est atteinte
   [
-      'method' => 'home',
-      'controller' => 'mainController'
+    'method' => 'home',
+    'controller' => '\app\controllers\mainController'
   ],
-  // 4eme argument (facultatif)
   'main-home'
 );
 
-// CART
-$router->map(
-  'GET',
-  '/panier',
-  [
-      'method' => 'cart',
-      'controller' => 'mainController'
-  ],
-  'main-cart'
-);
+/* -------------
+--- DISPATCH ---
+--------------*/
 
-// PRODUCT
-$router->map(
-  'GET',
-  '/manga/[*:name]/[i:tome]',
-  [
-      'method' => 'product',
-      'controller' => 'categoryController'
-  ],
-  'category-product'
-);
-
-// CATEGORY LIST
-$router->map(
-  'GET',
-  '/categorie/[a:name]',
-  [
-      'method' => 'list',
-      'controller' => 'categoryController'
-  ],
-  'category-list'
-);
-
-// ORDER BY DEFAULT
-$router->map(
-  'POST',
-  '/categorie/[a:name]',
-  [
-      'method' => 'list',
-      'controller' => 'categoryController'
-  ],
-  'category-list-post'
-);
-
-// ORDER BY NAME
-$router->map(
-  'POST',
-  '/categorie/[a:name]/by-name',
-  [
-      'method' => 'list',
-      'controller' => 'categoryController'
-  ],
-  'category-list-byname'
-);
-
-// ORDER BY PRICE
-$router->map(
-  'POST',
-  '/categorie/[a:name]/by-price',
-  [
-      'method' => 'list',
-      'controller' => 'categoryController'
-  ],
-  'category-list-byprice'
-);
-
-// EDITOR LIST
-$router->map(
-  'GET',
-  '/editeur/[*:name]',
-  [
-      'method' => 'list',
-      'controller' => 'editorController'
-  ],
-  'editor-list'
-);
-
-// ORDER BY DEFAULT
-$router->map(
-  'POST',
-  '/editeur/[*:name]',
-  [
-      'method' => 'list',
-      'controller' => 'editorController'
-  ],
-  'editor-list-post'
-);
-
-// ORDER BY NAME
-$router->map(
-  'POST',
-  '/editeur/[*:name]/by-name',
-  [
-      'method' => 'list',
-      'controller' => 'editorController'
-  ],
-  'editor-list-byname'
-);
-
-// ORDER BY PRICE
-$router->map(
-  'POST',
-  '/editeur/[*:name]/by-price',
-  [
-      'method' => 'list',
-      'controller' => 'editorController'
-  ],
-  'editor-list-byprice'
-);
-
-// Une fois que toutes sont definie, on va pouvoir demander a AltoRouter de verifier si la route atteinte par l'utilisation est une route qui correspond a celles que l'on a listees precedemment
+// On demande à AltoRouter de trouver une route qui correspond à l'URL courante
 $match = $router->match();
 
-if ($match) {
-    // Récupère le nom du controller à partir du target (le 3eme argument que l'on a renseigne au moment ou l'on a défini la route avec $router->map)
-    $controllerToUse = $match['target']['controller'];
-    // Récupère la méthode du controller à partir du target (le 3eme argument que l'on a renseigne au moment ou l'on a défini la route avec $router->map)
-    $methodToCall = $match['target']['method'];
-
-    // Crée une instance du bon controlleur, afin de pouvoir utiliser toutes les methodes de ce dernier
-    $controller = new ('\app\controllers\\' . $controllerToUse)();
-
-    // Appelle la bonne methode du controller
-    $controller->$methodToCall($match['params']);
-} else {
-    // header('HTTP/1.0 404 Not Found');
-    echo "Error 404";
-}
+// Ensuite, pour dispatcher le code dans la bonne méthode, du bon Controller
+// On délègue à une librairie externe : https://packagist.org/packages/benoclock/alto-dispatcher
+// 1er argument : la variable $match retournée par AltoRouter
+// 2e argument : le "target" (controller & méthode) pour afficher la page 404
+$dispatcher = new Dispatcher($match, '\app\controllers\errorController::error404');
+// Une fois le "dispatcher" configuré, on lance le dispatch qui va exécuter la méthode du controller
+$dispatcher->dispatch();

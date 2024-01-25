@@ -2,47 +2,43 @@
 
 namespace app\controllers;
 
-use app\models\product;
-use app\models\category;
-use app\models\editor;
-
 class coreController
 {
-    // Empty constructor
-    public function __construct()
-    {
-        // Do nothing
-    }
-
     /**
-     * Shows the templates (View)
+     * Méthode permettant d'afficher du code HTML en se basant sur les views
      *
-     * @param [type] $viewName
-     * @param array $viewData
+     * @param string $viewName Nom du fichier de vue
+     * @param array $viewData Tableau des données à transmettre aux vues
      * @return void
      */
-    // Une fonction qui va permettre d'assembler les differents templates
-    protected function show($viewName, $viewData = [])
+    protected function show(string $viewName, $viewData = [])
     {
+        // On globalise $router car on ne sait pas faire mieux pour l'instant
         global $router;
 
-        // Chemin absolue
-        $absoluteURL = $_SERVER['BASE_URI'];
+        // Comme $viewData est déclarée comme paramètre de la méthode show()
+        // les vues y ont accès
+        // ici une valeur dont on a besoin sur TOUTES les vues
+        // donc on la définit dans show()
+        $viewData['currentPage'] = $viewName;
 
-        // Récupère un tableau de tous les produits en base de donnees
-        $productObj = new Product();
-        $productList = $productObj->findAll();
+        // définir l'url absolue pour nos assets
+        $viewData['assetsBaseUri'] = $_SERVER['BASE_URI'] . 'assets/';
+        // définir l'url absolue pour la racine du site
+        // /!\ != racine projet, ici on parle du répertoire public/
+        $viewData['baseUri'] = $_SERVER['BASE_URI'];
 
-        // Récupère un tableau de toutes les catégories en base de donnees
-        $categoryObj = new Category();
-        $categoryList = $categoryObj->findAll();
+        // On veut désormais accéder aux données de $viewData, mais sans accéder au tableau
+        // La fonction extract permet de créer une variable pour chaque élément du tableau passé en argument
+        extract($viewData);
+        // => la variable $currentPage existe désormais, et sa valeur est $viewName
+        // => la variable $assetsBaseUri existe désormais, et sa valeur est $_SERVER['BASE_URI'] . '/assets/'
+        // => la variable $baseUri existe désormais, et sa valeur est $_SERVER['BASE_URI']
+        // => il en va de même pour chaque élément du tableau
 
-        // Récupère un tableau de tous les éditeurs en base de donnees
-        $editorObj = new Editor();
-        $editorList = $editorObj->findAll();
-
-        require_once __DIR__ . "/../views/partials/header.tpl.php";
-        require_once __DIR__ . "/../views/$viewName.tpl.php";
-        require_once __DIR__ . "/../views/partials/footer.tpl.php";
+        // $viewData est disponible dans chaque fichier de vue
+        require_once __DIR__ . '/../views/layout/header.tpl.php';
+        require_once __DIR__ . '/../views/' . $viewName . '.tpl.php';
+        require_once __DIR__ . '/../views/layout/footer.tpl.php';
     }
 }
