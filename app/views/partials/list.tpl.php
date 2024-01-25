@@ -10,7 +10,7 @@
       <h1 class="hero-heading"><?= $viewData['tableObj']->getName() ?></h1>
       <div class="row">
         <div class="col-xl-12 offset-xl-0">
-          <p class="lead text-muted"><?= ($viewData['tableName'] === 'editor') ? 'Découvrez les mangas des éditions ' . $viewData['tableObj']->getName() . '.' : $viewData['tableObj']->getName() ?></p>
+          <p class="lead text-muted"><?= ($viewData['tableName'] === 'editor') ? 'Découvrez les mangas des éditions ' . $viewData['tableObj']->getName() . '.' : $viewData['tableObj']->getSubtitle() ?></p>
         </div>
       </div>
     </div>

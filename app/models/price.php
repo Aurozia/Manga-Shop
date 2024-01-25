@@ -30,15 +30,20 @@ class Price extends coreModel
     // 2. Connexion à la BDD
     $pdo = Database::getPDO();
 
-    // 3. Exécute la requete
-    $pdoStatement = $pdo->query($sql);
+    // 3. Préparation de la requête
+    $pdoStatement = $pdo->prepare($sql);
 
-    // Recupere les resultats lie a cette requete
-    // Les resultats auraient pu etre sous la forme d'un tableau associatif (PDO::FETCH__ASSOC) mais on souhaite les obtenir sous forme d'object ! On utilise donc PDO::FETCH__CLASS en precisant la classe 'Price'
-    $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'app\models\price');
+    // 4. Exécution de la requête
+    if ($pdoStatement->execute()) {
+      // 5. Recupere les resultats lie a cette requete
+      // Les resultats aurait pu etre sous la forme d'un tableau associatif (PDO::FETCH__ASSOC) mais on souhaite les obtenir sous forme d'objet ! On utilise donc PDO::FETCH__CLASS en precisant la classe 'Price'
+      $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'app\models\price');
 
-    // Retourne le tableau de Price
-    return $results;
+      // 6. Retourne le tableau de Price
+      return $results;
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -49,20 +54,28 @@ class Price extends coreModel
    */
   public function find($id)
   {
-    // 1. Requete pour récupérer UN prix grace a son id
-    $sql = 'SELECT * FROM `price` WHERE `id` = ' . $id;
+    // 1. Requête pour récupérer UNE catégorie grâce à son nom
+    $sql = 'SELECT * FROM `price` WHERE `id` = :id';
 
     // 2. Connexion à la BDD
     $pdo = Database::getPDO();
 
-    // 3. Exécute la requete
-    $pdoStatement = $pdo->query($sql);
+    // 3. Préparation de la requête
+    $pdoStatement = $pdo->prepare($sql);
 
-    // On recupere le resultat sous la forme d'un objet Price
-    $result = $pdoStatement->fetchObject('app\models\price');
+    // 4. Attribution des valeurs aux paramètres
+    $pdoStatement->bindValue(':id', $id, PDO::PARAM_STR);
 
-    // On retourne l'objet Price
-    return $result;
+    // 5. Exécution de la requête
+    if ($pdoStatement->execute()) {
+      // 6. Récupération du résultat sous la forme d'un objet Price
+      $result = $pdoStatement->fetchObject('app\models\price');
+
+      // 7. Retourne l'objet Price ou null si non trouvé
+      return $result !== false ? $result : null;
+    } else {
+      return false;
+    }
   }
 
   /**

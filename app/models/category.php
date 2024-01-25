@@ -35,15 +35,20 @@ class Category extends coreModel
     // 2. Connexion à la BDD
     $pdo = Database::getPDO();
 
-    // 3. Exécute la requete
-    $pdoStatement = $pdo->query($sql);
+    // 3. Préparation de la requête
+    $pdoStatement = $pdo->prepare($sql);
 
-    // Recupere les resultats lie a cette requete
-    // Les resultats auraient pu etre sous la forme d'un tableau associatif (PDO::FETCH__ASSOC) mais on souhaite les obtenir sous forme d'object ! On utilise donc PDO::FETCH__CLASS en precisant la classe 'Category'
-    $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'app\models\category');
+    // 4. Exécution de la requête
+    if ($pdoStatement->execute()) {
+      // 5. Recupere les resultats lie a cette requete
+      // Les resultats aurait pu etre sous la forme d'un tableau associatif (PDO::FETCH__ASSOC) mais on souhaite les obtenir sous forme d'objet ! On utilise donc PDO::FETCH__CLASS en precisant la classe 'Category'
+      $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'app\models\category');
 
-    // Retourne le tableau de Category
-    return $results;
+      // 6. Retourne le tableau de Category
+      return $results;
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -54,30 +59,28 @@ class Category extends coreModel
    */
   public function find($name)
   {
-      // 1. Requête pour récupérer UNE catégorie grâce à son nom
-      $sql = 'SELECT * FROM `category` WHERE `name` = :name';
-  
-      // 2. Connexion à la BDD
-      $pdo = Database::getPDO();
-  
-      // 3. Préparation de la requête
-      $pdoStatement = $pdo->prepare($sql);
-      
-      // 4. Attribution des valeurs aux paramètres
-      $pdoStatement->bindValue(':name', $name, PDO::PARAM_STR);
-  
-      // 5. Exécution de la requête
-      if ($pdoStatement->execute()) {
-          // 6. Récupération du résultat sous la forme d'un objet Category
-          $result = $pdoStatement->fetchObject('app\models\category');
-  
-          // 7. Retourne l'objet Category ou null si non trouvé
-          return $result !== false ? $result : null;
-      } else {
-          // Gestion des erreurs
-          // Vous pouvez logguer l'erreur, lancer une exception, ou prendre toute autre mesure nécessaire
-          return null;
-      }
+    // 1. Requête pour récupérer UNE catégorie grâce à son nom
+    $sql = 'SELECT * FROM `category` WHERE `name` = :name';
+
+    // 2. Connexion à la BDD
+    $pdo = Database::getPDO();
+
+    // 3. Préparation de la requête
+    $pdoStatement = $pdo->prepare($sql);
+
+    // 4. Attribution des valeurs aux paramètres
+    $pdoStatement->bindValue(':name', $name, PDO::PARAM_STR);
+
+    // 5. Exécution de la requête
+    if ($pdoStatement->execute()) {
+      // 6. Récupération du résultat sous la forme d'un objet Category
+      $result = $pdoStatement->fetchObject('app\models\category');
+
+      // 7. Retourne l'objet Category ou null si non trouvé
+      return $result !== false ? $result : null;
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -87,26 +90,31 @@ class Category extends coreModel
    */
   public function findCategoriesForHomePage()
   {
-  // 1. Requete pour récupérer les 3 catégories
-      $sql = 'SELECT * FROM `category` WHERE home_order > 0 ORDER BY home_order ASC LIMIT 3';
+    // 1. Requete pour récupérer les 3 catégories
+    $sql = 'SELECT * FROM `category` WHERE home_order > 0 ORDER BY home_order ASC LIMIT 3';
 
-  // 2. Connexion à la BDD
-  $pdo = Database::getPDO();
+    // 2. Connexion à la BDD
+    $pdo = Database::getPDO();
 
-  // 3. Exécute la requete
-  $pdoStatement = $pdo->query($sql);
+    // 3. Exécute la requete
+    $pdoStatement = $pdo->query($sql);
 
-      // On Recupere les resultats lie a cette requete
-      // Les resultats auraient pu etre sous la forme d'un tableau associatif (PDO::FETCH__ASSOC) mais on souhaite les obtenir sous forme d'object ! On utilise donc PDO::FETCH__CLASS en precisant la classe 'Category'
+    // 4. Exécution de la requête
+    if ($pdoStatement->execute()) {
+      // 5. Recupere les resultats lie a cette requete
+      // Les resultats aurait pu etre sous la forme d'un tableau associatif (PDO::FETCH__ASSOC) mais on souhaite les obtenir sous forme d'objet ! On utilise donc PDO::FETCH__CLASS en precisant la classe 'Category'
       $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'app\models\category');
 
-      // On retourne l'objet Category
+      // 6. Retourne le tableau de Category
       return $results;
+    } else {
+      return false;
+    }
   }
 
   /**
    * Get the value of name
-   */ 
+   */
   public function getName()
   {
     return $this->name;
@@ -116,7 +124,7 @@ class Category extends coreModel
    * Set the value of name
    *
    * @return  self
-   */ 
+   */
   public function setName($name)
   {
     $this->name = $name;
@@ -126,7 +134,7 @@ class Category extends coreModel
 
   /**
    * Get the value of subtitle
-   */ 
+   */
   public function getSubtitle()
   {
     return $this->subtitle;
@@ -136,7 +144,7 @@ class Category extends coreModel
    * Set the value of subtitle
    *
    * @return  self
-   */ 
+   */
   public function setSubtitle($subtitle)
   {
     $this->subtitle = $subtitle;
@@ -146,7 +154,7 @@ class Category extends coreModel
 
   /**
    * Get the value of picture
-   */ 
+   */
   public function getPicture()
   {
     return $this->picture;
@@ -156,7 +164,7 @@ class Category extends coreModel
    * Set the value of picture
    *
    * @return  self
-   */ 
+   */
   public function setPicture($picture)
   {
     $this->picture = $picture;
@@ -164,9 +172,9 @@ class Category extends coreModel
     return $this;
   }
 
-    /**
+  /**
    * Get the value of url
-   */ 
+   */
   public function getUrl()
   {
     return $this->url;
@@ -176,7 +184,7 @@ class Category extends coreModel
    * Set the value of url
    *
    * @return  self
-   */ 
+   */
   public function setUrl($url)
   {
     $this->url = $url;
@@ -186,7 +194,7 @@ class Category extends coreModel
 
   /**
    * Get the value of home_order
-   */ 
+   */
   public function getHome_order()
   {
     return $this->home_order;
@@ -196,7 +204,7 @@ class Category extends coreModel
    * Set the value of home_order
    *
    * @return  self
-   */ 
+   */
   public function setHome_order($home_order)
   {
     $this->home_order = $home_order;
@@ -206,7 +214,7 @@ class Category extends coreModel
 
   /**
    * Get the value of home_subtitle
-   */ 
+   */
   public function getHome_subtitle()
   {
     return $this->home_subtitle;
@@ -216,7 +224,7 @@ class Category extends coreModel
    * Set the value of home_subtitle
    *
    * @return  self
-   */ 
+   */
   public function setHome_subtitle($home_subtitle)
   {
     $this->home_subtitle = $home_subtitle;
