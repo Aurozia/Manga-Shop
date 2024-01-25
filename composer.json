@@ -1,7 +1,8 @@
 {
     "require": {
         "altorouter/altorouter": "^2.0",
-        "kint-php/kint": "^5.1"
+        "kint-php/kint": "^5.1",
+        "benoclock/alto-dispatcher": "^1.3"
     },
 
     "autoload": {

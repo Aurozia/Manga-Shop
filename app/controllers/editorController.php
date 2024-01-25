@@ -21,8 +21,7 @@ class editorController extends coreController
     if (str_contains($params['name'], '/')) {
       $url = explode('/', $params['name']);
       $name = $url[0];
-    }
-    else {
+    } else {
       $name = $params['name'];
     }
 
@@ -33,23 +32,22 @@ class editorController extends coreController
     if ($editorFoundInDB) {
       $productsByEditorObj = new Product();
 
-      if(!empty($_POST)) {
-				if (isset($_POST['select'])) {
-					$selectedOption = $_POST['select'];
-					if (str_contains($selectedOption, 'by-name')) {
-						$order = 'name';
-					} else if (str_contains($selectedOption, 'by-price')) {
-						$order = 'price_id';
-					} else {
-						$order = 'null';
-					}
-				}
-			}
+      if (!empty($_POST)) {
+        if (isset($_POST['select'])) {
+          $selectedOption = $_POST['select'];
+          if (str_contains($selectedOption, 'by-name')) {
+            $order = 'name';
+          } else if (str_contains($selectedOption, 'by-price')) {
+            $order = 'price_id';
+          } else {
+            $order = 'null';
+          }
+        }
+      }
 
-      if($order!==null) {
-				$productsByEditorList = $productsByEditorObj->findAllBy($editorFoundInDB->getId(), $table = 'editor_id', $order);
-			}
-			else {
+      if ($order !== null) {
+        $productsByEditorList = $productsByEditorObj->findAllBy($editorFoundInDB->getId(), $table = 'editor_id', $order);
+      } else {
         $productsByEditorList = $productsByEditorObj->findProductsByEditor($editorFoundInDB->getId());
       }
 

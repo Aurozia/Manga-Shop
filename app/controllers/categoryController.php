@@ -65,8 +65,7 @@ class categoryController extends coreController
     if (str_contains($params['name'], '/')) {
       $url = explode('/', $params['name']);
       $name = $url[0];
-    }
-    else {
+    } else {
       $name = $params['name'];
     }
 
@@ -77,23 +76,22 @@ class categoryController extends coreController
     if ($categoryFoundInDB) {
       $productsByCategoryObj = new Product();
 
-      if(!empty($_POST)) {
-				if (isset($_POST['select'])) {
-					$selectedOption = $_POST['select'];
-					if (str_contains($selectedOption, 'by-name')) {
-						$order = 'name';
-					} else if (str_contains($selectedOption, 'by-price')) {
-						$order = 'price_id';
-					} else {
-						$order = 'null';
-					}
-				}
-			}
+      if (!empty($_POST)) {
+        if (isset($_POST['select'])) {
+          $selectedOption = $_POST['select'];
+          if (str_contains($selectedOption, 'by-name')) {
+            $order = 'name';
+          } else if (str_contains($selectedOption, 'by-price')) {
+            $order = 'price_id';
+          } else {
+            $order = 'null';
+          }
+        }
+      }
 
-      if($order!==null) {
-				$productsByCategoryList = $productsByCategoryObj->findAllBy($categoryFoundInDB->getId(), $table = 'category_id', $order);
-			}
-			else {
+      if ($order !== null) {
+        $productsByCategoryList = $productsByCategoryObj->findAllBy($categoryFoundInDB->getId(), $table = 'category_id', $order);
+      } else {
         $productsByCategoryList = $productsByCategoryObj->findProductsByCategory($categoryFoundInDB->getId());
       }
 

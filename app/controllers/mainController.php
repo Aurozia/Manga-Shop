@@ -15,16 +15,16 @@ class mainController extends coreController
   // Method that will display the home page
   public function home()
   {
-		// 1. créer une nouvelle instance de Category "vide" (modifie pas ses attributs)
+    // 1. créer une nouvelle instance de Category "vide" (modifie pas ses attributs)
     $categoryObj = new Category();
 
-		// 2. executer la fonction findCategoriesForHomePage() de Category en passant par l'intance que je viens de créer
-		$categoryForHomePage = $categoryObj->findCategoriesForHomePage();
+    // 2. executer la fonction findCategoriesForHomePage() de Category en passant par l'intance que je viens de créer
+    $categoryForHomePage = $categoryObj->findCategoriesForHomePage();
 
     $this->show(
       'main/home',
       [
-          'categoryForHomePage' => $categoryForHomePage
+        'categoryForHomePage' => $categoryForHomePage
       ]
     );
   }
